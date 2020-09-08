@@ -1,5 +1,6 @@
 import React from 'react';
 import { FiArrowLeft, FiLock, FiMail, FiUser } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 import logoImg from '../../assets/logo.svg';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
@@ -20,10 +21,10 @@ const SignUp: React.FC = () => {
           <Input name="password" type="password" icon={FiLock} placeholder="Senha" />
           <Button type="submit">Cadastrar</Button>
         </form>
-        <a href="/#">
+        <Link to="/">
           <FiArrowLeft />
           Voltar para login
-        </a>
+        </Link>
       </Content>
     </Container>
   );
