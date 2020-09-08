@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 
 interface ContainerProps {
+  hasError: boolean;
   hasValue: boolean;
   isFocused: boolean;
 }
