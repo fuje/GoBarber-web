@@ -2,6 +2,7 @@ import { Form } from '@unform/web';
 import React, { useCallback } from 'react';
 import { FiLock, FiLogIn, FiMail } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import * as Yup from 'yup';
 import logoImg from '../../assets/logo.svg';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
@@ -13,8 +14,19 @@ interface SignInFormData {
 }
 
 const SignIn: React.FC = () => {
-  const onSubmit = useCallback((data: SignInFormData) => {
-    console.log(data);
+  const onSubmit = useCallback(async (data: SignInFormData) => {
+    try {
+      const schema = Yup.object().shape({
+        email: Yup.string().required('E-mail obrigatório').email('Digite um e-mail válido'),
+        password: Yup.string().required('Senha obrigatória'),
+      });
+
+      await schema.validate(data, {
+        abortEarly: false,
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }, []);
 
   return (

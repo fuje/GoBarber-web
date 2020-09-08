@@ -2,16 +2,33 @@ import { Form } from '@unform/web';
 import React, { useCallback } from 'react';
 import { FiArrowLeft, FiLock, FiMail, FiUser } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import * as Yup from 'yup';
 import logoImg from '../../assets/logo.svg';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import { AnimationContainer, Background, Container, Content } from './styles';
 
-// import { Form } from "@unform/core";
+interface SignUpFormData {
+  name: string;
+  email: string;
+  password: string;
+}
 
 const SignUp: React.FC = () => {
-  const onSubmit = useCallback(() => {
-    console.log('test');
+  const onSubmit = useCallback(async (data: SignUpFormData) => {
+    try {
+      const schema = Yup.object().shape({
+        name: Yup.string().required('Nome obrigatório'),
+        email: Yup.string().required('E-mail obrigatório').email('Digite um e-mail válido'),
+        password: Yup.string().min(6, 'No mínimo 6 caracteres'),
+      });
+
+      await schema.validate(data, {
+        abortEarly: false,
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }, []);
 
   return (
