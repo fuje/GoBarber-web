@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { api } from '../services/api';
 
 interface AuthData {
   token: string;
@@ -37,12 +38,29 @@ export const AuthProvider: React.FC = ({ children }) => {
     return {} as AuthData;
   });
 
-  const signIn = useCallback((credentials: SignInCredentials) => {
-    console.log('sign in');
+  useEffect(() => {
+    if (data.token && data.user) {
+      localStorage.setItem(TOKEN_KEY, data.token);
+      localStorage.setItem(USER_DATA_KEY, JSON.stringify(data.user));
+    } else {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_DATA_KEY);
+    }
+  }, [data]);
+
+  const signIn = useCallback(async (credentials: SignInCredentials) => {
+    const response = await api.post<{ user: object; token: string }>('/sessions', credentials);
+
+    const { token, user } = response.data;
+
+    setData({
+      user,
+      token,
+    });
   }, []);
 
   const signOut = useCallback(() => {
-    console.log('sign out');
+    setData({} as AuthData);
   }, []);
 
   return <AuthContext.Provider value={{ user: data.user, signIn, signOut }}>{children}</AuthContext.Provider>;

@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 import logoImg from '../../assets/logo.svg';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+import useAuth from '../../hooks/useAuth';
 import getValidationErrors from '../../utils/getValidationErrors';
 import { AnimationContainer, Background, Container, Content } from './styles';
 
@@ -17,6 +18,7 @@ interface SignInFormData {
 
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const { signIn } = useAuth();
 
   const onSubmit = useCallback(async (data: SignInFormData) => {
     try {
@@ -30,6 +32,8 @@ const SignIn: React.FC = () => {
       await schema.validate(data, {
         abortEarly: false,
       });
+
+      signIn(data);
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         formRef.current?.setErrors(getValidationErrors(err));
